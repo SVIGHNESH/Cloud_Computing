@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Vighnesh Shukla">
+<title>Unit I: Introduction to Cloud Computing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&display=swap">
+<link rel="stylesheet" href="notes.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="course">
+    <a href="index.html">All units</a>
+    <span>BCS071 · Cloud Computing · AKTU</span>
+    <a href="unit2.html">Go to Unit II →</a>
+  </div>
+  <h1><span class="unit-no">Unit I.</span> Introduction to Cloud Computing</h1>
+  <p class="scope">Definition of cloud, evolution of cloud computing, underlying principles of parallel and distributed computing, cloud characteristics, elasticity in cloud, on-demand provisioning. Service and deployment models as the foundation.</p>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Topics">
+    <p>Topics</p>
+    <ol>
+      <li><a href="#definition">Definition of cloud</a></li>
+      <li><a href="#evolution">Evolution</a></li>
+      <li><a href="#parallel-distributed">Parallel vs distributed</a></li>
+      <li><a href="#principles">Underlying principles</a></li>
+      <li><a href="#characteristics">Cloud characteristics</a></li>
+      <li><a href="#elasticity">Elasticity</a></li>
+      <li><a href="#provisioning">On-demand provisioning</a></li>
+      <li><a href="#service-models">Service models</a></li>
+      <li><a href="#deployment">Deployment models</a></li>
+      <li><a class="case" href="#cases">Case studies</a></li>
+      <li><a href="#revision">Quick revision</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <div class="tip">
+      <b class="lbl">How to score in this unit</b>
+      <p>Almost every question here is a definition + comparison + example.</p>
+      <ol>
+        <li>Start with the <strong>NIST definition</strong> (5 essentials).</li>
+        <li>Draw a <strong>neat labelled diagram</strong> (evolution timeline, IaaS/PaaS/SaaS stack, elasticity curve).</li>
+        <li>Write a <strong>table</strong> for every comparison (parallel vs distributed, elasticity vs scalability, IaaS vs PaaS vs SaaS).</li>
+        <li>Close with <strong>one example</strong> (EC2, Auto Scaling, Gmail) and one line on advantages/disadvantages.</li>
+      </ol>
+    </div>
+
+    <!-- 1 -->
+    <section id="definition">
+      <h2><span class="num">01</span>Definition of cloud computing</h2>
+      <p>Cloud computing is the <strong>on-demand delivery of computing resources</strong> (servers, storage, databases, networking, software) over the internet, paid for as they are used instead of bought and maintained up front.</p>
+      <div class="key">
+        <span class="lbl">NIST definition (memorise this line)</span>
+        <p>"A model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort."</p>
+      </div>
+      <h3>The five essential characteristics (NIST)</h3>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Characteristic</th><th>Meaning</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><strong>On-demand self-service</strong></td><td>Provision servers or storage yourself through a console or API, no human interaction with the provider</td><td>Launching an EC2 VM from the AWS console in minutes</td></tr>
+            <tr><td><strong>Broad network access</strong></td><td>Services reachable over the network from any standard device</td><td>Laptop, phone, or another cloud service calling the same API</td></tr>
+            <tr><td><strong>Resource pooling</strong></td><td>Provider's physical resources shared among many customers (multi-tenancy), assigned dynamically; customer knows the region, not the exact machine</td><td>Hundreds of VMs on one physical host</td></tr>
+            <tr><td><strong>Rapid elasticity</strong></td><td>Capacity grows and shrinks automatically with demand; appears unlimited</td><td>10 servers at night, 500 during a sale, back to 10 by evening</td></tr>
+            <tr><td><strong>Measured service</strong></td><td>Usage (CPU-hours, GB stored, requests) is metered and billed like electricity</td><td>Pay per GB-month on S3, per request on Lambda</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The economic shift is from <strong>CapEx to OpEx</strong>: no large upfront purchase of hardware, only operational payment for what is used. This is what lets a start-up deploy in Mumbai, Frankfurt and Virginia in one afternoon.</p>
+      <dl class="terms">
+        <dt>Cloud</dt><dd>The provider's data centres plus the software that rents slices of them.</dd>
+        <dt>Utility computing</dt><dd>Computing consumed like electricity: metered, elastic, always available.</dd>
+        <dt>Multi-tenancy</dt><dd>Many customers sharing the same physical hardware with logical isolation.</dd>
+      </dl>
+    </section>
+
+    <!-- 2 -->
+    <section id="evolution">
+      <h2><span class="num">02</span>Evolution of cloud computing</h2>
+      <figure>
+        <div class="fig">
+          <svg viewBox="0 0 700 300" width="700" role="img" aria-label="Evolution timeline from mainframe to cloud">
+            <path d="M30,150 L670,150" class="ln" marker-end="url(#arEv)"/>
+            <defs><marker id="arEv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
+            <rect x="20" y="60" width="115" height="60" rx="6" class="box-acc"/><text x="77" y="84" text-anchor="middle" class="t-b">Mainframe</text><text x="77" y="101" text-anchor="middle" class="t-m">1950s–60s</text>
+            <rect x="150" y="180" width="115" height="60" rx="6" class="box"/><text x="207" y="204" text-anchor="middle" class="t-b">Client-Server</text><text x="207" y="221" text-anchor="middle" class="t-m">1980s</text>
+            <rect x="280" y="60" width="115" height="60" rx="6" class="box-acc"/><text x="337" y="84" text-anchor="middle" class="t-b">Cluster / Grid</text><text x="337" y="101" text-anchor="middle" class="t-m">1990s</text>
+            <rect x="410" y="180" width="115" height="60" rx="6" class="box"/><text x="467" y="204" text-anchor="middle" class="t-b">Virtualization</text><text x="467" y="221" text-anchor="middle" class="t-m">2000s</text>
+            <rect x="540" y="60" width="115" height="60" rx="6" class="box-acc"/><text x="597" y="84" text-anchor="middle" class="t-b">Cloud</text><text x="597" y="101" text-anchor="middle" class="t-m">2006 onward</text>
+            <text x="77" y="40" text-anchor="middle" class="t-m">time-sharing, one big machine</text>
+            <text x="207" y="265" text-anchor="middle" class="t-m">PCs + servers over LAN</text>
+            <text x="337" y="40" text-anchor="middle" class="t-m">many machines, one job</text>
+            <text x="467" y="265" text-anchor="middle" class="t-m">many VMs, one host</text>
+            <text x="597" y="40" text-anchor="middle" class="t-m">rented over internet</text>
+          </svg>
+        </div>
+        <figcaption>Five stages. Virtualization is the key enabler: without it there is no pooling, no elasticity, no cloud.</figcaption>
+      </figure>
+      <ul>
+        <li><strong>Mainframe (1950s–60s)</strong> - one large central machine shared through dumb terminals. First idea of computing as a shared utility.</li>
+        <li><strong>Client-server (1980s)</strong> - cheap PCs (clients) request services from a central server over a LAN.</li>
+        <li><strong>Cluster and grid (1990s)</strong> - many independent machines connected to act as one: inside one site (cluster), then across organisations (grid).</li>
+        <li><strong>Virtualization (2000s)</strong> - a hypervisor lets one physical server run several isolated VMs. Resources can be carved up, moved, copied and billed.</li>
+        <li><strong>Cloud (2006 onward)</strong> - Amazon launches EC2/S3, turning virtualized data centres into a rentable public service. Later: containers, serverless, edge.</li>
+      </ul>
+    </section>
+
+    <!-- 3 -->
+    <section id="parallel-distributed">
+      <h2><span class="num">03</span>Parallel vs distributed computing</h2>
+      <p>A cloud data centre is a <strong>distributed system whose individual nodes are parallel machines</strong>. Both foundations appear in every exam.</p>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Aspect</th><th>Parallel computing</th><th>Distributed computing</th></tr></thead>
+          <tbody>
+            <tr><td>Definition</td><td>Many processors work on parts of one task at the same time</td><td>Many independent computers cooperate over a network</td></tr>
+            <tr><td>Memory</td><td>Usually shared memory (all processors see the same RAM)</td><td>Each node has its own private memory</td></tr>
+            <tr><td>Communication</td><td>Through shared memory, very fast</td><td>Through message passing, slower</td></tr>
+            <tr><td>Coupling</td><td>Tightly coupled, one machine</td><td>Loosely coupled, many machines</td></tr>
+            <tr><td>Clock</td><td>Single system clock</td><td>No global clock; synchronisation is a real problem</td></tr>
+            <tr><td>Failure</td><td>One failure usually stops the whole job</td><td>Designed to keep working when a node fails</td></tr>
+            <tr><td>Scalability</td><td>Limited by cores in the machine</td><td>Scales by adding machines</td></tr>
+            <tr><td>Main goal</td><td>Speed up one computation</td><td>Resource sharing, availability, scale</td></tr>
+            <tr><td>Example</td><td>Multi-core CPU, GPU, supercomputer</td><td>Internet, Hadoop cluster, cloud data centre</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="principles">
+      <h2><span class="num">04</span>Underlying principles</h2>
+      <h3>Parallel computing</h3>
+      <ul>
+        <li><strong>Task decomposition</strong> - split by data (data parallelism) or by work (task parallelism).</li>
+        <li><strong>Concurrency and synchronisation</strong> - locks, barriers, semaphores prevent race conditions.</li>
+        <li><strong>Flynn's taxonomy</strong> - SISD, SIMD (GPUs), MISD, MIMD (multi-core CPUs).</li>
+        <li><strong>Amdahl's law</strong> - speed-up is limited by the serial fraction. If 10% must run sequentially, no number of processors gives more than 10x speed-up.</li>
+        <li><strong>Load balancing</strong> - the slowest processor sets the finish time.</li>
+      </ul>
+      <h3>Distributed computing</h3>
+      <ul>
+        <li><strong>Message passing</strong> - no shared memory; nodes cooperate via RPC, REST, MPI, queues.</li>
+        <li><strong>Transparency</strong> - hide where resources live, how they are accessed, whether replicated, and when they move or fail.</li>
+        <li><strong>No global clock</strong> - ordering needs Lamport / vector clocks or consensus (Paxos, Raft).</li>
+        <li><strong>Fault tolerance</strong> - partial failure is normal; replication, heartbeats, retries.</li>
+        <li><strong>CAP theorem</strong> - during a network partition, choose consistency or availability. Drives every distributed database design.</li>
+        <li><strong>Architectural styles</strong> - client-server, peer-to-peer, three-tier, service-oriented / microservices.</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section id="characteristics">
+      <h2><span class="num">05</span>Cloud characteristics (innovative)</h2>
+      <p>Beyond the NIST five, examiners expect this extended list:</p>
+      <ul>
+        <li><strong>Virtualization</strong> - the technical foundation; hardware abstracted into software units created and destroyed in seconds.</li>
+        <li><strong>Pay-as-you-go</strong> - CapEx becomes OpEx; metering makes it real.</li>
+        <li><strong>Reliability and availability</strong> - replication across zones/regions; SLAs of 99.9%+.</li>
+        <li><strong>Global scale</strong> - deploy in many regions in an afternoon.</li>
+        <li><strong>Automation and programmability</strong> - infrastructure as code (Terraform, CloudFormation), APIs everywhere.</li>
+        <li><strong>Security as shared responsibility</strong> - provider secures the platform; customer secures data, identities, configuration.</li>
+        <li><strong>Managed innovation</strong> - ML, analytics, serverless, managed databases consumed as building blocks.</li>
+      </ul>
+      <div class="tip"><b class="lbl">One-line answer</b><p>Together these turn computing from a <strong>product you buy</strong> into a <strong>utility you consume</strong>.</p></div>
+    </section>
+
+    <!-- 6 -->
+    <section id="elasticity">
+      <h2><span class="num">06</span>Elasticity in cloud</h2>
+      <p><strong>Elasticity</strong> is the ability to automatically acquire resources when demand rises and release them when it falls, so resources in use always match the workload. Scale out/in (more/fewer instances) or up/down (bigger/smaller instances), without downtime.</p>
+      <figure>
+        <div class="fig">
+          <svg viewBox="0 0 640 260" width="640" role="img" aria-label="Elasticity: allocated resources track demand">
+            <defs><marker id="arEl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
+            <path d="M60,220 L60,30" class="ln" marker-end="url(#arEl)"/>
+            <path d="M60,220 L610,220" class="ln" marker-end="url(#arEl)"/>
+            <path d="M60,190 C130,185 160,80 240,70 S340,180 400,175 S520,60 600,90" class="ln-soft" stroke-dasharray="6 4"/>
+            <path d="M60,180 L150,180 L150,130 L190,130 L190,60 L290,60 L290,120 L330,120 L330,165 L440,165 L440,120 L490,120 L490,55 L600,55" class="ln-acc"/>
+            <text x="335" y="245" text-anchor="middle" class="t-m">time →</text>
+            <text x="40" y="125" text-anchor="middle" class="t-m" transform="rotate(-90 40 125)">load</text>
+            <text x="440" y="40" class="t-m">- - demand</text>
+            <text x="440" y="22" class="t-acc">— allocated</text>
+          </svg>
+        </div>
+        <figcaption>Elastic allocation (solid) tracks demand (dashed). Without elasticity you pay for the peak all day.</figcaption>
+      </figure>
+      <div class="tbl">
+        <table>
+          <thead><tr><th></th><th>Scalability</th><th>Elasticity</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Meaning</strong></td><td>Capacity to handle growing load by adding resources</td><td>Automatic scaling up <em>and down</em> in real time</td></tr>
+            <tr><td><strong>Direction</strong></td><td>Usually up only, often planned</td><td>Both directions, driven by metrics (CPU, queue length)</td></tr>
+            <tr><td><strong>Example</strong></td><td>Buying a bigger server for Diwali season</td><td>Auto Scaling Group: 2 servers at night, 20 at peak, 2 after</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Example:</strong> an e-commerce site keeps 2 web servers at night, grows to 20 when CPU crosses 70%, and shrinks back after the sale. The customer pays only for servers that ran.</p>
+    </section>
+
+    <!-- 7 -->
+    <section id="provisioning">
+      <h2><span class="num">07</span>On-demand provisioning</h2>
+      <p>Resources (VMs, storage, networks, databases, accounts) are <strong>allocated at the moment requested</strong> via portal or API, and de-allocated when no longer needed. Weeks of procurement become seconds.</p>
+      <div class="flow"><span>User requests</span><i>→</i><span>Self-service portal / API</span><i>→</i><span class="em">Provisioning engine</span><i>→</i><span>Resource ready</span></div>
+      <h3>Types of provisioning</h3>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Type</th><th>Idea</th><th>Suits</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Advance (static)</strong></td><td>Fixed resources contracted in advance, flat fee</td><td>Steady, predictable load</td><td>Reserved Instances for a year</td></tr>
+            <tr><td><strong>Dynamic</strong></td><td>Added/removed automatically as load changes, pay per use</td><td>Variable traffic</td><td>Auto Scaling policies</td></tr>
+            <tr><td><strong>User self-provisioning</strong></td><td>Customer creates resources directly with a credit card, in minutes</td><td>Dev/test, learning</td><td>VM from the Azure portal</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Provisioning by what is provisioned</h3>
+      <ul>
+        <li><strong>Server</strong> - physical/virtual server with OS and software.</li>
+        <li><strong>Storage</strong> - block, file, object storage with capacity and performance.</li>
+        <li><strong>Network</strong> - IPs, subnets, firewalls, load balancers, VPNs.</li>
+        <li><strong>Application/service</strong> - managed database, SaaS accounts for users.</li>
+        <li><strong>User (identity)</strong> - accounts, roles, permissions via IAM.</li>
+      </ul>
+      <p class="muted"><strong>Risk:</strong> uncontrolled self-provisioning causes cost sprawl and security gaps without governance policies.</p>
+    </section>
+
+    <!-- 8 -->
+    <section id="service-models">
+      <h2><span class="num">08</span>Service models: IaaS, PaaS, SaaS</h2>
+      <p>Differ in how much of the stack the provider manages. Moving left to right, the provider takes over more and the customer manages less.</p>
+      <figure>
+        <div class="fig">
+          <svg viewBox="0 0 700 330" width="700" role="img" aria-label="IaaS PaaS SaaS responsibility stack">
+            <text x="110" y="20" text-anchor="middle" class="t-b">On-prem</text>
+            <text x="270" y="20" text-anchor="middle" class="t-b">IaaS</text>
+            <text x="430" y="20" text-anchor="middle" class="t-b">PaaS</text>
+            <text x="590" y="20" text-anchor="middle" class="t-b">SaaS</text>
+            <g font-size="12" text-anchor="middle">
+              <rect x="40" y="30" width="140" height="28" class="box-soft"/><text x="110" y="49" class="t">Applications</text>
+              <rect x="40" y="60" width="140" height="28" class="box-soft"/><text x="110" y="79" class="t">Data</text>
+              <rect x="40" y="90" width="140" height="28" class="box-soft"/><text x="110" y="109" class="t">Runtime</text>
+              <rect x="40" y="120" width="140" height="28" class="box-soft"/><text x="110" y="139" class="t">Middleware</text>
+              <rect x="40" y="150" width="140" height="28" class="box-soft"/><text x="110" y="169" class="t">OS</text>
+              <rect x="40" y="180" width="140" height="28" class="box-soft"/><text x="110" y="199" class="t">Virtualization</text>
+              <rect x="40" y="210" width="140" height="28" class="box-soft"/><text x="110" y="229" class="t">Servers</text>
+              <rect x="40" y="240" width="140" height="28" class="box-soft"/><text x="110" y="259" class="t">Storage</text>
+              <rect x="40" y="270" width="140" height="28" class="box-soft"/><text x="110" y="289" class="t">Networking</text>
+              <rect x="200" y="30" width="140" height="28" class="box-soft"/><text x="270" y="49" class="t">Applications</text>
+              <rect x="200" y="60" width="140" height="28" class="box-soft"/><text x="270" y="79" class="t">Data</text>
+              <rect x="200" y="90" width="140" height="28" class="box-soft"/><text x="270" y="109" class="t">Runtime</text>
+              <rect x="200" y="120" width="140" height="28" class="box-soft"/><text x="270" y="139" class="t">Middleware</text>
+              <rect x="200" y="150" width="140" height="28" class="box-soft"/><text x="270" y="169" class="t">OS</text>
+              <rect x="200" y="180" width="140" height="28" class="box-acc"/><text x="270" y="199" class="t">Virtualization</text>
+              <rect x="200" y="210" width="140" height="28" class="box-acc"/><text x="270" y="229" class="t">Servers</text>
+              <rect x="200" y="240" width="140" height="28" class="box-acc"/><text x="270" y="259" class="t">Storage</text>
+              <rect x="200" y="270" width="140" height="28" class="box-acc"/><text x="270" y="289" class="t">Networking</text>
+              <rect x="360" y="30" width="140" height="28" class="box-soft"/><text x="430" y="49" class="t">Applications</text>
+              <rect x="360" y="60" width="140" height="28" class="box-soft"/><text x="430" y="79" class="t">Data</text>
+              <rect x="360" y="90" width="140" height="28" class="box-acc"/><text x="430" y="109" class="t">Runtime</text>
+              <rect x="360" y="120" width="140" height="28" class="box-acc"/><text x="430" y="139" class="t">Middleware</text>
+              <rect x="360" y="150" width="140" height="28" class="box-acc"/><text x="430" y="169" class="t">OS</text>
+              <rect x="360" y="180" width="140" height="28" class="box-acc"/><text x="430" y="199" class="t">Virtualization</text>
+              <rect x="360" y="210" width="140" height="28" class="box-acc"/><text x="430" y="229" class="t">Servers</text>
+              <rect x="360" y="240" width="140" height="28" class="box-acc"/><text x="430" y="259" class="t">Storage</text>
+              <rect x="360" y="270" width="140" height="28" class="box-acc"/><text x="430" y="289" class="t">Networking</text>
+              <rect x="520" y="30" width="140" height="28" class="box-acc"/><text x="590" y="49" class="t">Applications</text>
+              <rect x="520" y="60" width="140" height="28" class="box-acc"/><text x="590" y="79" class="t">Data</text>
+              <rect x="520" y="90" width="140" height="28" class="box-acc"/><text x="590" y="109" class="t">Runtime</text>
+              <rect x="520" y="120" width="140" height="28" class="box-acc"/><text x="590" y="139" class="t">Middleware</text>
+              <rect x="520" y="150" width="140" height="28" class="box-acc"/><text x="590" y="169" class="t">OS</text>
+              <rect x="520" y="180" width="140" height="28" class="box-acc"/><text x="590" y="199" class="t">Virtualization</text>
+              <rect x="520" y="210" width="140" height="28" class="box-acc"/><text x="590" y="229" class="t">Servers</text>
+              <rect x="520" y="240" width="140" height="28" class="box-acc"/><text x="590" y="259" class="t">Storage</text>
+              <rect x="520" y="270" width="140" height="28" class="box-acc"/><text x="590" y="289" class="t">Networking</text>
+            </g>
+            <text x="260" y="318" text-anchor="middle" class="t-m">dashed = you manage · solid = provider manages</text>
+          </svg>
+        </div>
+        <figcaption>Responsibility stack. Pizza analogy: on-prem is cooking at home, IaaS is a rented kitchen, PaaS is take-and-bake, SaaS is dining out.</figcaption>
+      </figure>
+      <div class="tbl">
+        <table>
+          <thead><tr><th></th><th>IaaS</th><th>PaaS</th><th>SaaS</th></tr></thead>
+          <tbody>
+            <tr><td>You manage</td><td>OS, runtime, apps, data</td><td>Apps and data</td><td>Nothing (just use it)</td></tr>
+            <tr><td>Typical user</td><td>Sysadmins, DevOps</td><td>Developers</td><td>End users</td></tr>
+            <tr><td>Control / ease</td><td>High control, low ease</td><td>Medium / medium</td><td>Low control, high ease</td></tr>
+            <tr><td>Example</td><td>AWS EC2, Azure VMs</td><td>Heroku, App Engine</td><td>Gmail, M365, Salesforce</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="deployment">
+      <h2><span class="num">09</span>Deployment models</h2>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Model</th><th>Description</th><th>Advantages</th><th>Disadvantages</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Public</strong></td><td>Owned by provider, shared over internet (AWS, Azure, GCP)</td><td>Lowest cost, no maintenance, global scale</td><td>Less control, multi-tenant concerns</td></tr>
+            <tr><td><strong>Private</strong></td><td>Dedicated to one organisation (OpenStack, VMware)</td><td>Full control, compliance</td><td>High CapEx, limited scale</td></tr>
+            <tr><td><strong>Hybrid</strong></td><td>Private + public connected</td><td>Sensitive stays private, burst to public</td><td>Integration complexity</td></tr>
+            <tr><td><strong>Community</strong></td><td>Shared by organisations with common needs</td><td>Cost shared, sector compliance</td><td>Slower shared decisions</td></tr>
+            <tr><td><strong>Multi-cloud</strong></td><td>Two or more public providers</td><td>No lock-in, best of each</td><td>Highest management complexity</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CASES -->
+    <section id="cases">
+      <h2><span class="num">★</span>Case studies &amp; scenarios</h2>
+      <p>Try each one on paper first, then open the model answer.</p>
+      <div class="toolbar">
+        <button type="button" id="openAll">Show all answers</button>
+        <button type="button" id="closeAll">Hide all answers</button>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 1 · Festival sale</span>
+        <p class="q">An e-commerce site gets 10x traffic during a festival sale and near-zero traffic at night. It currently owns 20 servers sized for the peak. Identify the problem and design a cloud solution with elasticity and provisioning.</p>
+        <details><summary>Model answer</summary><div>
+          <p><strong>Problem:</strong> static advance provisioning for the peak wastes money (18 servers idle most days) yet still risks under-provisioning if the sale exceeds estimates.</p>
+          <p><strong>Solution:</strong> move to <strong>dynamic provisioning + elasticity</strong>: an Auto Scaling Group behind a load balancer, scaling on CPU/request-rate (e.g. add servers above 70% CPU). Keep 2 servers at night, grow to 20+ at peak, shrink after. Pay per server-hour (measured service).</p>
+          <p><strong>Models:</strong> public cloud <strong>IaaS</strong> (EC2) for full control; hybrid if payment data must stay private.</p>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 2 · Parallel or distributed?</span>
+        <p class="q">Classify: (a) GPU training a neural network, (b) Google Search serving queries worldwide, (c) a Hadoop cluster counting word frequencies. Justify each.</p>
+        <details><summary>Model answer</summary><div>
+          <ul>
+            <li>(a) <strong>Parallel</strong>: one machine, many cores, shared memory, single clock, goal is speed.</li>
+            <li>(b) <strong>Distributed</strong>: thousands of independent servers, private memories, message passing, no global clock, goal is availability and scale.</li>
+            <li>(c) <strong>Distributed with parallel nodes</strong>: cluster of machines (distributed) each using multi-core parallelism internally - exactly like a cloud data centre.</li>
+          </ul>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 3 · College lab on IaaS vs PaaS vs SaaS</span>
+        <p class="q">A college wants: (a) student VMs for OS lab, (b) a platform for final-year projects in Python/Node without server management, (c) email for all staff. Map each to IaaS/PaaS/SaaS with an example.</p>
+        <details><summary>Model answer</summary><div>
+          <ul>
+            <li>(a) <strong>IaaS</strong> (EC2 / Azure VMs): admins need OS-level control to install kernels and tools.</li>
+            <li>(b) <strong>PaaS</strong> (App Engine / Heroku / Elastic Beanstalk): students push code; provider manages runtime, scaling, patching.</li>
+            <li>(c) <strong>SaaS</strong> (Gmail / Microsoft 365): no installation, browser access, provider updates.</li>
+          </ul>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 4 · Elasticity vs scalability</span>
+        <p class="q">A manager says "we are scalable because we bought a bigger server for next year". Explain why this is scalability but not elasticity, and what is missing.</p>
+        <details><summary>Model answer</summary><div>
+          <p>Buying a bigger server is <strong>scalability</strong> (capacity to grow, planned, one direction). <strong>Elasticity</strong> additionally needs <strong>automation + shrink-back</strong>: metrics-driven scale-out/in in real time with per-use billing. Missing: auto-scaling policies, monitoring, measured service, and the ability to release resources (and stop paying) when demand falls.</p>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 5 · Hospital cloud choice</span>
+        <p class="q">A hospital chain must keep patient records compliant and private, but wants cheap public-cloud burst capacity for appointment-booking traffic spikes. Recommend a deployment model.</p>
+        <details><summary>Model answer</summary><div>
+          <p><strong>Hybrid cloud</strong>: sensitive records stay in a <strong>private cloud</strong> (control, compliance); the booking front-end bursts to the <strong>public cloud</strong> at peak. Connect with VPN/direct link and IAM federation. Pure public fails compliance; pure private cannot burst cheaply; multi-cloud adds unneeded complexity here.</p>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 6 · VDI for exam labs</span>
+        <p class="q">A university wants identical exam desktops on cheap lab PCs with no data left on the machines. Propose VDI: components, persistent vs non-persistent, pros/cons.</p>
+        <details><summary>Model answer</summary><div>
+          <p><strong>Components:</strong> thin clients/laptops → connection broker (auth, assign desktop) → desktop VMs on hypervisor + central storage, over RDP/PCoIP display protocol.</p>
+          <p>Use <strong>non-persistent</strong> desktops from a golden image (fresh every session, nothing stored locally). <strong>Pros:</strong> central patching, data stays in data centre, any device works. <strong>Cons:</strong> network-dependent, upfront server/storage cost, licensing complexity (Horizon / Citrix / Azure Virtual Desktop).</p>
+        </div></details>
+      </div>
+
+      <div class="tip">
+        <b class="lbl">Answer template for any scenario</b>
+        <ol>
+          <li>One line: what the system must do.</li>
+          <li>NIST characteristics involved.</li>
+          <li>Parallel vs distributed classification if asked.</li>
+          <li>Elasticity/provisioning mechanism + metric.</li>
+          <li>Service model (IaaS/PaaS/SaaS) and deployment model with reasons.</li>
+          <li>Cost, security and compliance trade-off for extra marks.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- revision -->
+    <section id="revision">
+      <h2><span class="num">12</span>Quick revision (2-mark answers)</h2>
+      <ul class="qr">
+        <li><b>Cloud:</b> on-demand network access to a shared pool of configurable resources, billed per use.</li>
+        <li><b>NIST 5:</b> on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service.</li>
+        <li><b>CapEx → OpEx:</b> no upfront hardware purchase; pay operationally per use.</li>
+        <li><b>Evolution:</b> mainframe → client-server → cluster/grid → virtualization → cloud (2006 EC2/S3).</li>
+        <li><b>Parallel:</b> many processors, one machine, shared memory, goal is speed.</li>
+        <li><b>Distributed:</b> many machines, private memories, message passing, goal is scale/availability.</li>
+        <li><b>Amdahl's law:</b> serial fraction caps speed-up (10% serial → max 10x).</li>
+        <li><b>CAP:</b> during partition choose consistency or availability.</li>
+        <li><b>Elasticity:</b> automatic scale up and down with demand; scalability is growth only.</li>
+        <li><b>Provisioning:</b> advance (fixed), dynamic (auto), self-service (portal/API).</li>
+        <li><b>IaaS:</b> VMs/storage/network (EC2); <b>PaaS:</b> platform for code (Heroku); <b>SaaS:</b> ready app (Gmail).</li>
+        <li><b>Deployments:</b> public, private, hybrid, community, multi-cloud.</li>
+        <li><b>VDI:</b> desktops as central VMs; only pixels travel to endpoints.</li>
+        <li><b>DR:</b> restore IT after disruption; RTO = how fast, RPO = how much data loss.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<footer class="end">
+  <span>BCS071 · Unit I notes · Syllabus: AKTU BCS071 Unit I</span>
+  <a href="unit2.html">Continue to Unit II: SOA &amp; Virtualization →</a>
+  <span class="credit">Made by <a href="https://github.com/SVIGHNESH">Vighnesh Shukla</a></span>
+</footer>
+
+<script>
+  document.getElementById('openAll').addEventListener('click', () => document.querySelectorAll('.case details').forEach(d => d.open = true));
+  document.getElementById('closeAll').addEventListener('click', () => document.querySelectorAll('.case details').forEach(d => d.open = false));
+</script>
+</body>
+</html>

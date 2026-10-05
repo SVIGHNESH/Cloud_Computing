@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Vighnesh Shukla">
+<title>Unit II: SOA &amp; Virtualization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&display=swap">
+<link rel="stylesheet" href="notes.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="course">
+    <a href="index.html">All units</a>
+    <a href="unit1.html">← Unit I</a>
+    <span>BCS071 · Cloud Computing · AKTU</span>
+  </div>
+  <h1><span class="unit-no">Unit II.</span> Cloud Enabling Technologies: SOA &amp; Virtualization</h1>
+  <p class="scope">Service-oriented architecture, REST and systems of systems, web services, publish-subscribe model, basics of virtualization, types, implementation levels, structures, tools and mechanisms, CPU / memory / I/O virtualization, virtualization support and disaster recovery.</p>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Topics">
+    <p>Topics</p>
+    <ol>
+      <li><a href="#soa">Service-oriented architecture</a></li>
+      <li><a href="#web-services">Web services</a></li>
+      <li><a href="#rest">REST</a></li>
+      <li><a href="#pubsub">Publish-subscribe model</a></li>
+      <li><a href="#virt-basics">Basics of virtualization</a></li>
+      <li><a href="#virt-types">Types of virtualization</a></li>
+      <li><a href="#virt-levels">Implementation levels</a></li>
+      <li><a href="#virt-mechanisms">Structures, tools, mechanisms</a></li>
+      <li><a href="#cpu-mem-io">CPU / memory / I/O</a></li>
+      <li><a href="#dr">Support and disaster recovery</a></li>
+      <li><a class="case" href="#cases">Case studies</a></li>
+      <li><a href="#revision">Quick revision</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <div class="tip">
+      <b class="lbl">What professors usually ask from this unit</b>
+      <ul>
+        <li>"Explain virtualization of CPU / memory / I/O" - draw the hypervisor stack and give all three techniques.</li>
+        <li>"SOA vs REST vs SOAP" - triangle diagram + constraints + message structure.</li>
+        <li>A scenario (travel site, exam system, hospital) asking for SOA design or a DR plan with RTO/RPO.</li>
+        <li>Five levels of virtualization and hypervisor types as a table.</li>
+      </ul>
+    </div>
+
+    <!-- 1 -->
+    <section id="soa">
+      <h2><span class="num">01</span>Service-oriented architecture (SOA)</h2>
+      <p>SOA builds an application from independent, reusable <strong>services</strong>, each doing one business function. Services communicate over a network using standard protocols, so they can be written in different languages and run on different platforms.</p>
+      <figure>
+        <div class="fig">
+          <svg viewBox="0 0 640 260" width="640" role="img" aria-label="SOA triangle: provider publishes to registry, consumer finds, then binds">
+            <defs><marker id="arSoa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
+            <rect x="220" y="15" width="200" height="60" rx="6" class="box-acc"/><text x="320" y="40" text-anchor="middle" class="t-b">Service Registry</text><text x="320" y="58" text-anchor="middle" class="t-m">(UDDI)</text>
+            <rect x="20" y="175" width="190" height="60" rx="6" class="box"/><text x="115" y="200" text-anchor="middle" class="t-b">Consumer</text><text x="115" y="218" text-anchor="middle" class="t-m">(client)</text>
+            <rect x="430" y="175" width="190" height="60" rx="6" class="box"/><text x="525" y="200" text-anchor="middle" class="t-b">Provider</text><text x="525" y="218" text-anchor="middle" class="t-m">(publishes WSDL)</text>
+            <path d="M490,175 L390,75" class="ln" marker-end="url(#arSoa)"/><text x="485" y="115" class="t-m">1. Publish</text>
+            <path d="M150,175 L250,75" class="ln" marker-end="url(#arSoa)"/><text x="150" y="115" class="t-m">2. Find</text>
+            <path d="M210,205 L430,205" class="ln-acc" marker-end="url(#arSoa)"/><text x="320" y="195" text-anchor="middle" class="t-acc">3. Bind + invoke</text>
+          </svg>
+        </div>
+        <figcaption>SOA triangle. Provider publishes, consumer finds, then binds directly to invoke.</figcaption>
+      </figure>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Role</th><th>Does what</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Provider</strong></td><td>Creates the service and publishes its description (WSDL).</td></tr>
+            <tr><td><strong>Registry</strong></td><td>Directory (UDDI) where services are listed and discovered.</td></tr>
+            <tr><td><strong>Consumer</strong></td><td>Finds the service and calls it (bind + invoke).</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Features:</strong> loose coupling, reusability, interoperability, abstraction, discoverability. <strong>Example:</strong> a travel site combining separate flight, hotel and payment services. Systems built from such interacting services are called <strong>systems of systems</strong>.</p>
+    </section>
+
+    <!-- 2 -->
+    <section id="web-services">
+      <h2><span class="num">02</span>Web services: SOAP building blocks</h2>
+      <p><strong>SOAP (Simple Object Access Protocol)</strong> is an XML-based protocol for exchanging messages, usually over HTTP. A SOAP message has four parts:</p>
+      <div class="split">
+        <div><h5>Envelope (required)</h5><p>Root element marking the XML as a SOAP message.</p></div>
+        <div><h5>Header (optional)</h5><p>Security, transaction ID, routing info.</p></div>
+        <div><h5>Body (required)</h5><p>Actual request/response data.</p></div>
+        <div><h5>Fault (optional)</h5><p>Inside the Body; error code and message.</p></div>
+      </div>
+      <p>Services are described in <strong>WSDL</strong> (what operations exist, required) and listed in <strong>UDDI</strong> (directory). SOAP has built-in <strong>WS-Security</strong>, which is why banks and enterprises still use it despite its heaviness.</p>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Basis</th><th>RESTful</th><th>RESTless (SOAP)</th></tr></thead>
+          <tbody>
+            <tr><td>Type</td><td>Architectural style</td><td>Protocol</td></tr>
+            <tr><td>Data format</td><td>JSON, XML, text</td><td>XML only</td></tr>
+            <tr><td>Interface</td><td>Resources via URIs</td><td>Operations via one endpoint</td></tr>
+            <tr><td>HTTP methods</td><td>GET, POST, PUT, DELETE</td><td>Mostly POST</td></tr>
+            <tr><td>Description</td><td>OpenAPI (optional)</td><td>WSDL (required)</td></tr>
+            <tr><td>State / cache</td><td>Stateless, cacheable</td><td>Can be stateful, hard to cache</td></tr>
+            <tr><td>Performance</td><td>Fast, lightweight</td><td>Slower, heavy XML</td></tr>
+            <tr><td>Used for</td><td>Web/mobile apps (GitHub, Maps APIs)</td><td>Banking, enterprise systems</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="rest">
+      <h2><span class="num">03</span>REST: architecture style for distributed systems</h2>
+      <p><strong>REST (Roy Fielding, 2000)</strong> treats everything as a <strong>resource</strong> identified by a URI (e.g. <code>/students/101</code>); clients exchange representations, usually JSON, over HTTP.</p>
+      <h3>REST constraints</h3>
+      <ul>
+        <li><strong>Client-server</strong> - evolve independently.</li>
+        <li><strong>Stateless</strong> - each request carries everything; server keeps no session.</li>
+        <li><strong>Cacheable</strong> - responses can be cached.</li>
+        <li><strong>Uniform interface</strong> - standard URIs + HTTP methods for every resource.</li>
+        <li><strong>Layered system</strong> - proxies and load balancers can sit in between.</li>
+        <li><strong>Code on demand</strong> (optional) - server may send executable code (JavaScript).</li>
+      </ul>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Method</th><th>Operation</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>GET</code></td><td>Read</td><td><code>GET /students/101</code></td></tr>
+            <tr><td><code>POST</code></td><td>Create</td><td><code>POST /students</code></td></tr>
+            <tr><td><code>PUT</code></td><td>Update</td><td><code>PUT /students/101</code></td></tr>
+            <tr><td><code>DELETE</code></td><td>Delete</td><td><code>DELETE /students/101</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="pubsub">
+      <h2><span class="num">04</span>Publish-subscribe model</h2>
+      <p>In request-response, the consumer calls the provider directly. In <strong>publish-subscribe</strong>, publishers emit events to a <strong>broker/topic</strong> and subscribers receive only the topics they subscribed to - publishers and subscribers never address each other.</p>
+      <div class="flow"><span>Publisher (provider)</span><i>→ publish</i><span class="em">Broker / topic</span><i>→ deliver</i><span>Subscribers (consumers)</span></div>
+      <ul>
+        <li><strong>Decoupling:</strong> in time (subscriber offline still gets later messages), space (no addresses), and synchronization (async).</li>
+        <li><strong>Example:</strong> flight-price service publishes <code>fares/delhi-goa</code>; the booking site, the alert app and analytics all subscribe independently.</li>
+        <li><strong>Cloud tools:</strong> MQTT topics, Apache Kafka, AWS SNS/SQS, Azure Service Bus.</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section id="virt-basics">
+      <h2><span class="num">05</span>Basics of virtualization</h2>
+      <p>A <strong>hypervisor (Virtual Machine Monitor)</strong> sits between hardware and operating systems, letting several VMs share one physical machine while each believes it owns the CPU, memory and devices. <span class="hl">This is the foundation of resource pooling and elasticity.</span></p>
+      <figure>
+        <div class="fig">
+          <svg viewBox="0 0 640 270" width="640" role="img" aria-label="Hypervisor stack with three VMs">
+            <defs><marker id="arVx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
+            <rect x="30" y="10" width="180" height="90" rx="6" class="box-soft"/><text x="120" y="35" text-anchor="middle" class="t-b">VM 1</text><text x="120" y="58" text-anchor="middle" class="t-m">Apps + Guest OS</text>
+            <rect x="230" y="10" width="180" height="90" rx="6" class="box-soft"/><text x="320" y="35" text-anchor="middle" class="t-b">VM 2</text><text x="320" y="58" text-anchor="middle" class="t-m">Apps + Guest OS</text>
+            <rect x="430" y="10" width="180" height="90" rx="6" class="box-soft"/><text x="520" y="35" text-anchor="middle" class="t-b">VM 3</text><text x="520" y="58" text-anchor="middle" class="t-m">Apps + Guest OS</text>
+            <rect x="30" y="130" width="580" height="50" rx="6" class="box-acc"/><text x="320" y="152" text-anchor="middle" class="t-b">Hypervisor / VMM</text><text x="320" y="168" text-anchor="middle" class="t-m">virtual CPU, memory, I/O</text>
+            <rect x="30" y="210" width="180" height="45" rx="6" class="box"/><text x="120" y="237" text-anchor="middle" class="t-b">CPU</text>
+            <rect x="230" y="210" width="180" height="45" rx="6" class="box"/><text x="320" y="237" text-anchor="middle" class="t-b">RAM</text>
+            <rect x="430" y="210" width="180" height="45" rx="6" class="box"/><text x="520" y="237" text-anchor="middle" class="t-b">NIC, Disk, GPU</text>
+          </svg>
+        </div>
+        <figcaption>Each VM sees virtual hardware; the hypervisor maps it to physical hardware.</figcaption>
+      </figure>
+      <div class="tbl">
+        <table>
+          <thead><tr><th></th><th>Type 1 (bare-metal)</th><th>Type 2 (hosted)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Runs on</strong></td><td>Directly on hardware</td><td>On a host OS</td></tr>
+            <tr><td><strong>Performance</strong></td><td>Near-native, best isolation</td><td>Slower (extra layer)</td></tr>
+            <tr><td><strong>Use</strong></td><td>Data centres, cloud</td><td>Laptops, learning</td></tr>
+            <tr><td><strong>Examples</strong></td><td>VMware ESXi, Hyper-V, KVM, Xen</td><td>VirtualBox, VMware Workstation</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="virt-types">
+      <h2><span class="num">06</span>Types of virtualization</h2>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Server / hardware</strong></td><td>One server split into many VMs via hypervisor</td><td>ESXi, EC2</td></tr>
+            <tr><td><strong>OS (containers)</strong></td><td>Isolated containers share one kernel; lightweight, fast</td><td>Docker, LXC</td></tr>
+            <tr><td><strong>Storage</strong></td><td>Many devices pooled into one logical store</td><td>SAN, EBS</td></tr>
+            <tr><td><strong>Network</strong></td><td>Physical net split into virtual nets (SDN)</td><td>VLAN, VPC</td></tr>
+            <tr><td><strong>Desktop (VDI)</strong></td><td>Desktop OS on server, accessed remotely</td><td>WorkSpaces, Horizon</td></tr>
+            <tr><td><strong>Application</strong></td><td>App runs without local install</td><td>App-V</td></tr>
+            <tr><td><strong>Data</strong></td><td>Sources shown as one virtual view</td><td>Denodo</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="key"><span class="lbl">Containers vs VMs (asked often)</span><p>VMs virtualize <strong>hardware</strong> (each has a full guest OS, heavy, strong isolation). Containers virtualize the <strong>OS</strong> (share the host kernel, fast to start, weaker isolation). Cloud uses both: VMs for tenants, containers for microservices inside.</p></div>
+    </section>
+
+    <!-- 7 -->
+    <section id="virt-levels">
+      <h2><span class="num">07</span>Implementation levels of virtualization</h2>
+      <p>Five levels, from lowest (closest to hardware) to highest. Lower levels give stronger isolation; higher levels are simpler.</p>
+      <div class="tbl">
+        <table>
+          <thead><tr><th class="num">Level</th><th>Name</th><th>Idea</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td><strong>ISA level</strong></td><td>Emulate the instruction set; run code for another CPU</td><td>QEMU emulating ARM on x86</td></tr>
+            <tr><td class="num">2</td><td><strong>Hardware abstraction (HAL)</strong></td><td>Hypervisor maps virtual hardware to physical (classic VMs)</td><td>VMware, KVM, Xen</td></tr>
+            <tr><td class="num">3</td><td><strong>Operating system level</strong></td><td>Isolate processes into containers on one kernel</td><td>Docker, LXC</td></tr>
+            <tr><td class="num">4</td><td><strong>Library level</strong></td><td>Intercept API calls (e.g. system calls) and redirect</td><td>Wine, vCUDA</td></tr>
+            <tr><td class="num">5</td><td><strong>Application level</strong></td><td>App runs in its own virtual machine (language VM)</td><td>JVM, .NET CLR</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section id="virt-mechanisms">
+      <h2><span class="num">08</span>Virtualization structures, tools and mechanisms</h2>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Technique</th><th>Idea</th><th>Trade-off</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Full virtualization (binary translation)</strong></td><td>Sensitive instructions rewritten on the fly; guest unmodified</td><td>Works with any OS, slower</td></tr>
+            <tr><td><strong>Paravirtualization</strong></td><td>Guest modified to call hypervisor directly (hypercalls)</td><td>Faster, needs modified OS (Xen)</td></tr>
+            <tr><td><strong>Hardware-assisted</strong></td><td>CPU traps sensitive instructions (Intel VT-x, AMD-V)</td><td>Fast, unmodified guest (KVM)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li><strong>Memory:</strong> shadow page tables (hypervisor-maintained) vs <strong>EPT/NPT</strong> (CPU does two-level translation in hardware); <strong>ballooning</strong> reclaims idle memory; <strong>page sharing</strong> stores identical pages once.</li>
+        <li><strong>I/O:</strong> full emulation (simple, slow) → <strong>para-virtual I/O</strong> (virtio frontend/backend, faster) → <strong>passthrough/SR-IOV</strong> (device assigned to VM, near-native).</li>
+      </ul>
+    </section>
+
+    <!-- 9 -->
+    <section id="cpu-mem-io">
+      <h2><span class="num">09</span>Virtualization of CPU, memory and I/O devices</h2>
+      <h3>1. CPU virtualization</h3>
+      <p>Hypervisor gives each VM virtual CPUs (vCPUs) scheduled on real cores. Normal instructions run directly; privileged ones trap to the hypervisor via the three techniques above.</p>
+      <h3>2. Memory virtualization</h3>
+      <p>Two-level mapping: guest-virtual → guest-physical (guest OS) → host-machine address (hypervisor). Handled by shadow tables or EPT, plus ballooning and sharing for efficiency.</p>
+      <h3>3. I/O virtualization</h3>
+      <p>Many VMs share few NICs/disks: emulate in software, use virtio split drivers, or assign the device directly (SR-IOV shares one physical card as many virtual functions).</p>
+      <div class="tip"><b class="lbl">Memory trick for exams</b><p>CPU = trap-and-emulate · Memory = two-level mapping · I/O = emulate, paravirtualize, or passthrough.</p></div>
+    </section>
+
+    <!-- 10 -->
+    <section id="dr">
+      <h2><span class="num">10</span>Virtualization support and disaster recovery</h2>
+      <p><strong>Disaster Recovery (DR)</strong> restores IT systems after hardware failure, cyber-attack, fire, flood or human error. Two numbers define every plan:</p>
+      <div class="split">
+        <div><h5>RTO</h5><p>Recovery Time Objective: how quickly the service must be back up.</p></div>
+        <div><h5>RPO</h5><p>Recovery Point Objective: how much data (in time) can be lost - e.g. 15 min means backups at least every 15 min.</p></div>
+      </div>
+      <p>Cloud makes DR cheap because the standby site is <strong>rented, not owned</strong>. Virtualization helps directly: whole VMs (OS + app + data) are files that can be snapshotted, copied across regions and restarted in minutes.</p>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Pattern (cheap → fast)</th><th>Idea</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Backup and restore</strong></td><td>Backups in object storage; rebuild on failure (hours)</td></tr>
+            <tr><td><strong>Pilot light</strong></td><td>Core services always on, scaled up on demand</td></tr>
+            <tr><td><strong>Warm standby</strong></td><td>Scaled-down copy always running; promote on failure (minutes)</td></tr>
+            <tr><td><strong>Multi-site active-active</strong></td><td>Full copies in two regions; near-zero RTO</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Offered as <strong>DRaaS</strong>: AWS Elastic Disaster Recovery, Azure Site Recovery.</p>
+    </section>
+
+    <!-- CASES -->
+    <section id="cases">
+      <h2><span class="num">★</span>Case studies &amp; scenarios</h2>
+      <p>Try each one on paper first, then open the model answer.</p>
+      <div class="toolbar">
+        <button type="button" id="openAll">Show all answers</button>
+        <button type="button" id="closeAll">Hide all answers</button>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 1 · Travel site on SOA</span>
+        <p class="q">Design a travel-booking site that combines flights, hotels and payments from different vendors. Show the SOA roles and choose SOAP or REST for each interaction.</p>
+        <details><summary>Model answer</summary><div>
+          <p><strong>Roles:</strong> each vendor is a <strong>provider</strong> publishing WSDL/OpenAPI to a <strong>registry</strong>; the travel site is the <strong>consumer</strong> that finds, binds and invokes.</p>
+          <ul>
+            <li>Flight/hotel search: <strong>REST + JSON</strong> (high volume, cacheable, mobile-friendly).</li>
+            <li>Payment: <strong>SOAP + WS-Security</strong> (strict contracts, built-in security, banking compliance).</li>
+            <li>Price alerts: <strong>publish-subscribe</strong> (providers publish fare topics; users and analytics subscribe independently).</li>
+          </ul>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 2 · Hypervisor choice</span>
+        <p class="q">A data centre needs 200 production VMs with strong isolation; a student needs 3 Linux VMs on a Windows laptop for practice. Pick hypervisor types and justify.</p>
+        <details><summary>Model answer</summary><div>
+          <ul>
+            <li>Data centre: <strong>Type 1 bare-metal</strong> (ESXi / Hyper-V / KVM) - runs on hardware, near-native speed, strong isolation, no host OS overhead.</li>
+            <li>Student laptop: <strong>Type 2 hosted</strong> (VirtualBox / Workstation) - runs as an app on Windows, easy install, slower but fine for learning.</li>
+          </ul>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 3 · Slow VM under load</span>
+        <p class="q">A VM running a database is slow. The host has free CPU but memory is overcommitted. Explain the likely mechanism and two fixes using memory-virtualization tools.</p>
+        <details><summary>Model answer</summary><div>
+          <p>Likely <strong>memory pressure</strong>: two-level translation plus host swapping. Shadow/EPT overhead grows and the host pages to disk.</p>
+          <ul>
+            <li>Enable <strong>ballooning</strong> to reclaim idle memory from other VMs.</li>
+            <li>Enable <strong>page sharing</strong> (identical OS pages stored once) and, long term, use <strong>EPT/NPT hardware</strong> and right-size the VM.</li>
+          </ul>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 4 · Bank RTO/RPO</span>
+        <p class="q">A bank needs RTO &lt; 5 minutes and RPO ≈ 0 after a region failure. Propose a DR pattern and explain how virtualization makes it possible.</p>
+        <details><summary>Model answer</summary><div>
+          <p>Use <strong>multi-site active-active</strong>: full copies in two regions with synchronous replication (RPO ≈ 0) and DNS failover (RTO in minutes). Cheaper options (backup/restore, pilot light) miss the 5-minute RTO.</p>
+          <p><strong>Virtualization</strong> makes it practical: entire servers are VM images/snapshots that replicate and restart identically in the second region (DRaaS: Elastic Disaster Recovery / Site Recovery).</p>
+        </div></details>
+      </div>
+
+      <div class="case">
+        <span class="lbl">Case 5 · REST or SOAP?</span>
+        <p class="q">Compare building a public mobile-app API vs a bank-to-bank fund-transfer interface. Which style fits each and why?</p>
+        <details><summary>Model answer</summary><div>
+          <ul>
+            <li>Mobile API: <strong>RESTful</strong> - JSON, stateless, cacheable, uses GET/POST/PUT/DELETE, fast and simple.</li>
+            <li>Bank transfer: <strong>SOAP (RESTless)</strong> - strict WSDL contract, XML-only, built-in WS-Security, can be stateful; heaviness is acceptable for correctness.</li>
+          </ul>
+        </div></details>
+      </div>
+
+      <div class="tip">
+        <b class="lbl">Answer template for any scenario</b>
+        <ol>
+          <li>One line: who provides, who consumes.</li>
+          <li>SOA triangle or pub-sub sketch.</li>
+          <li>REST vs SOAP choice with reasons.</li>
+          <li>Virtualization level/type/mechanism involved.</li>
+          <li>RTO/RPO and DR pattern if availability is asked.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- revision -->
+    <section id="revision">
+      <h2><span class="num">12</span>Quick revision (2-mark answers)</h2>
+      <ul class="qr">
+        <li><b>SOA:</b> app built from independent reusable services; provider, registry, consumer.</li>
+        <li><b>Features:</b> loose coupling, reusability, interoperability, discoverability.</li>
+        <li><b>SOAP:</b> XML protocol; Envelope, Header, Body, Fault; described by WSDL.</li>
+        <li><b>REST:</b> resources via URIs, JSON over HTTP; stateless, cacheable, layered.</li>
+        <li><b>Methods:</b> GET read, POST create, PUT update, DELETE delete.</li>
+        <li><b>Pub-Sub:</b> publishers → broker/topic → subscribers; decoupled in time, space, sync.</li>
+        <li><b>Hypervisor:</b> software mapping virtual CPU/memory/I-O to physical (VMM).</li>
+        <li><b>Type 1 / 2:</b> bare-metal on hardware (ESXi) vs hosted on OS (VirtualBox).</li>
+        <li><b>Levels:</b> ISA, HAL, OS (containers), library, application (JVM).</li>
+        <li><b>CPU:</b> full (binary translation), para (hypercalls), hardware-assisted (VT-x).</li>
+        <li><b>Memory:</b> guest-virtual → guest-physical → machine; shadow tables or EPT; ballooning, sharing.</li>
+        <li><b>I/O:</b> emulation, virtio para-I/O, passthrough/SR-IOV.</li>
+        <li><b>RTO / RPO:</b> how fast to recover / how much data loss allowed.</li>
+        <li><b>DR patterns:</b> backup-restore, pilot light, warm standby, active-active.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<footer class="end">
+  <a href="unit1.html">← Back to Unit I: Introduction to Cloud Computing</a>
+  <span>BCS071 · Unit II notes · Syllabus: AKTU BCS071 Unit II</span>
+  <span class="credit">Made by <a href="https://github.com/SVIGHNESH">Vighnesh Shukla</a></span>
+</footer>
+
+<script>
+  document.getElementById('openAll').addEventListener('click', () => document.querySelectorAll('.case details').forEach(d => d.open = true));
+  document.getElementById('closeAll').addEventListener('click', () => document.querySelectorAll('.case details').forEach(d => d.open = false));
+</script>
+</body>
+</html>

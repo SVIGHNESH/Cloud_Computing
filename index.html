@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Vighnesh Shukla">
+<title>BCS071 Cloud Computing Notes</title>
+<meta name="description" content="Unit-wise notes for BCS071 Cloud Computing (AKTU).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&display=swap">
+<link rel="stylesheet" href="notes.css">
+<style>
+  .cover { max-width: 1180px; margin: 0 auto; padding-block: 56px 32px; border-bottom: 2px solid var(--ink); }
+  .cover .course { font: 600 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+  .cover h1 { font: 800 clamp(40px, 8vw, 88px)/.98 var(--display); letter-spacing: -.03em; margin: 0; text-wrap: balance; }
+  .cover h1 span { color: var(--accent); }
+  .cover .by { font: 600 14px/1 var(--mono); letter-spacing: .04em; color: var(--ink); margin-top: 20px; }
+  .cover .by a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .cover p { margin: 18px 0 0; color: var(--muted); max-width: 60ch; }
+
+  .units { max-width: 1180px; margin: 0 auto; padding: 0 0 16px; list-style: none; }
+  .unit:last-child a { border-bottom: 0; }
+  .unit a {
+    display: grid; grid-template-columns: minmax(84px, 140px) 1fr auto; gap: 8px 32px; align-items: start;
+    padding: 32px 0; border-bottom: 1px solid var(--rule); color: inherit; text-decoration: none;
+    opacity: 0; animation: rise .5s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .unit:nth-child(2) a { animation-delay: .08s; }
+  .unit:nth-child(3) a { animation-delay: .16s; }
+  .unit:nth-child(4) a { animation-delay: .24s; }
+  .unit:nth-child(5) a { animation-delay: .32s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .unit a { animation: none; opacity: 1; } }
+
+  .unit .no { font: 800 clamp(56px, 9vw, 104px)/.85 var(--display); color: var(--rule); transition: color .2s; letter-spacing: -.04em; }
+  .unit h2 { font: 700 clamp(24px, 3.2vw, 34px)/1.1 var(--display); letter-spacing: -.01em; margin: 4px 0 10px; transition: color .2s; }
+  .unit .scope { margin: 0; color: var(--muted); font-size: 16px; max-width: 72ch; }
+  .unit .topics { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 0; list-style: none; }
+  .unit .topics li { font: 500 12px/1 var(--mono); padding: 6px 9px; border-radius: 4px; background: var(--code-bg); color: var(--ink); }
+  .unit .go {
+    font: 600 13px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent);
+    margin-top: 12px; white-space: nowrap; display: flex; gap: 8px; align-items: center;
+  }
+  .unit .go::after { content: "→"; transition: transform .2s; }
+  .unit a:hover .no, .unit a:focus-visible .no { color: var(--accent); }
+  .unit a:hover h2, .unit a:focus-visible h2 { color: var(--accent); }
+  .unit a:hover .go::after, .unit a:focus-visible .go::after { transform: translateX(4px); }
+  .unit a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+
+  @media (max-width: 720px) {
+    .cover { padding-block: 36px 24px; }
+    .unit a { grid-template-columns: 1fr; padding: 28px 0; }
+    .unit .no { font-size: 56px; }
+    .unit .go { margin-top: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <p class="course">BCS071 · AKTU</p>
+  <h1>Cloud Computing <span>notes</span></h1>
+  <p class="by">By <a href="https://github.com/SVIGHNESH">Vighnesh Shukla</a></p>
+  <p>Pick a unit to open its notes. Each unit has topic-wise explanations, diagrams, case studies and a quick revision section.</p>
+</header>
+
+<ol class="units">
+  <li class="unit">
+    <a href="unit1.html">
+      <span class="no">01</span>
+      <div>
+        <h2>Introduction to Cloud Computing</h2>
+        <p class="scope">Definition of cloud, evolution from mainframes to cloud, parallel vs distributed computing principles, characteristics, elasticity, on-demand provisioning, service and deployment models.</p>
+        <ul class="topics">
+          <li>NIST 5 essentials</li><li>Evolution</li><li>Parallel vs distributed</li><li>Elasticity</li><li>Provisioning</li><li>IaaS / PaaS / SaaS</li>
+        </ul>
+      </div>
+      <span class="go">Open unit</span>
+    </a>
+  </li>
+  <li class="unit">
+    <a href="unit2.html">
+      <span class="no">02</span>
+      <div>
+        <h2>Cloud Enabling Technologies: SOA &amp; Virtualization</h2>
+        <p class="scope">Service-oriented architecture, REST, web services, publish-subscribe model, basics and types of virtualization, implementation levels, CPU / memory / I/O virtualization, virtualization support and disaster recovery.</p>
+        <ul class="topics">
+          <li>SOA</li><li>REST / SOAP</li><li>Pub-Sub</li><li>Hypervisors</li><li>CPU / Memory / I/O</li><li>Disaster recovery</li>
+        </ul>
+      </div>
+      <span class="go">Open unit</span>
+    </a>
+  </li>
+</ol>
+
+<footer class="end">
+  <span>BCS071 · Cloud Computing · AKTU</span>
+  <span class="credit">Made by <a href="https://github.com/SVIGHNESH">Vighnesh Shukla</a></span>
+</footer>
+
+</body>
+</html>
