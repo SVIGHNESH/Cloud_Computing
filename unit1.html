@@ -58,7 +58,7 @@
       <p>Cloud computing is the <strong>on-demand delivery of computing resources</strong> (servers, storage, databases, networking, software) over the internet, paid for as they are used instead of bought and maintained up front.</p>
       <div class="key">
         <span class="lbl">NIST definition (memorise this line)</span>
-        <p>"A model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort."</p>
+        <p>"A model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort or service provider interaction."</p>
       </div>
       <h3>The five essential characteristics (NIST)</h3>
       <div class="tbl">
@@ -86,14 +86,15 @@
       <h2><span class="num">02</span>Evolution of cloud computing</h2>
       <figure>
         <div class="fig">
-          <svg viewBox="0 0 700 300" width="700" role="img" aria-label="Evolution timeline from mainframe to cloud">
+          <svg viewBox="-20 0 720 300" width="700" style="min-width:560px" role="img" aria-label="Evolution timeline: mainframe time-sharing, to client-server PCs, to cluster and grid, to virtualization, to rented cloud">
             <path d="M30,150 L670,150" class="ln" marker-end="url(#arEv)"/>
             <defs><marker id="arEv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
-            <rect x="20" y="60" width="115" height="60" rx="6" class="box-acc"/><text x="77" y="84" text-anchor="middle" class="t-b">Mainframe</text><text x="77" y="101" text-anchor="middle" class="t-m">1950s–60s</text>
+            <path d="M77,150 L77,120" class="ln-soft"/><path d="M207,150 L207,180" class="ln-soft"/><path d="M337,150 L337,120" class="ln-soft"/><path d="M467,150 L467,180" class="ln-soft"/><path d="M597,150 L597,120" class="ln-soft"/>
+            <rect x="20" y="60" width="115" height="60" rx="6" class="box"/><text x="77" y="84" text-anchor="middle" class="t-b">Mainframe</text><text x="77" y="101" text-anchor="middle" class="t-m">1950s–60s</text>
             <rect x="150" y="180" width="115" height="60" rx="6" class="box"/><text x="207" y="204" text-anchor="middle" class="t-b">Client-Server</text><text x="207" y="221" text-anchor="middle" class="t-m">1980s</text>
-            <rect x="280" y="60" width="115" height="60" rx="6" class="box-acc"/><text x="337" y="84" text-anchor="middle" class="t-b">Cluster / Grid</text><text x="337" y="101" text-anchor="middle" class="t-m">1990s</text>
+            <rect x="280" y="60" width="115" height="60" rx="6" class="box"/><text x="337" y="84" text-anchor="middle" class="t-b">Cluster / Grid</text><text x="337" y="101" text-anchor="middle" class="t-m">1990s</text>
             <rect x="410" y="180" width="115" height="60" rx="6" class="box"/><text x="467" y="204" text-anchor="middle" class="t-b">Virtualization</text><text x="467" y="221" text-anchor="middle" class="t-m">2000s</text>
-            <rect x="540" y="60" width="115" height="60" rx="6" class="box-acc"/><text x="597" y="84" text-anchor="middle" class="t-b">Cloud</text><text x="597" y="101" text-anchor="middle" class="t-m">2006 onward</text>
+            <rect x="540" y="60" width="115" height="60" rx="6" class="box"/><text x="597" y="84" text-anchor="middle" class="t-b">Cloud</text><text x="597" y="101" text-anchor="middle" class="t-m">2006 onward</text>
             <text x="77" y="40" text-anchor="middle" class="t-m">time-sharing, one big machine</text>
             <text x="207" y="265" text-anchor="middle" class="t-m">PCs + servers over LAN</text>
             <text x="337" y="40" text-anchor="middle" class="t-m">many machines, one job</text>
@@ -175,19 +176,19 @@
     <!-- 6 -->
     <section id="elasticity">
       <h2><span class="num">06</span>Elasticity in cloud</h2>
-      <p><strong>Elasticity</strong> is the ability to automatically acquire resources when demand rises and release them when it falls, so resources in use always match the workload. Scale out/in (more/fewer instances) or up/down (bigger/smaller instances), without downtime.</p>
+      <p><strong>Elasticity</strong> is the ability to automatically acquire resources when demand rises and release them when it falls, so resources in use always match the workload. Scale out/in (more/fewer instances) happens without downtime; scale up/down (bigger/smaller instance) may need a restart depending on the provider and VM type.</p>
       <figure>
         <div class="fig">
-          <svg viewBox="0 0 640 260" width="640" role="img" aria-label="Elasticity: allocated resources track demand">
+          <svg viewBox="0 0 640 260" width="640" style="min-width:480px" role="img" aria-label="Elasticity graph: stepped allocated resources track the dashed demand curve over time">
             <defs><marker id="arEl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
             <path d="M60,220 L60,30" class="ln" marker-end="url(#arEl)"/>
             <path d="M60,220 L610,220" class="ln" marker-end="url(#arEl)"/>
             <path d="M60,190 C130,185 160,80 240,70 S340,180 400,175 S520,60 600,90" class="ln-soft" stroke-dasharray="6 4"/>
             <path d="M60,180 L150,180 L150,130 L190,130 L190,60 L290,60 L290,120 L330,120 L330,165 L440,165 L440,120 L490,120 L490,55 L600,55" class="ln-acc"/>
             <text x="335" y="245" text-anchor="middle" class="t-m">time →</text>
-            <text x="40" y="125" text-anchor="middle" class="t-m" transform="rotate(-90 40 125)">load</text>
-            <text x="440" y="40" class="t-m">- - demand</text>
-            <text x="440" y="22" class="t-acc">— allocated</text>
+            <text x="40" y="125" text-anchor="middle" class="t-m" transform="rotate(-90 40 125)">load / resources</text>
+            <path d="M400,20 L430,20" class="ln-acc"/><text x="436" y="24" class="t-acc">allocated</text>
+            <path d="M400,40 L430,40" class="ln-soft" stroke-dasharray="6 4"/><text x="436" y="44" class="t-m">demand</text>
           </svg>
         </div>
         <figcaption>Elastic allocation (solid) tracks demand (dashed). Without elasticity you pay for the peak all day.</figcaption>
@@ -238,12 +239,12 @@
       <p>Differ in how much of the stack the provider manages. Moving left to right, the provider takes over more and the customer manages less.</p>
       <figure>
         <div class="fig">
-          <svg viewBox="0 0 700 330" width="700" role="img" aria-label="IaaS PaaS SaaS responsibility stack">
+          <svg viewBox="0 0 700 330" width="700" style="min-width:560px" role="img" aria-label="Responsibility stack: on-prem you manage all 9 layers, IaaS the provider manages the bottom 4, PaaS the bottom 7, SaaS all 9">
             <text x="110" y="20" text-anchor="middle" class="t-b">On-prem</text>
             <text x="270" y="20" text-anchor="middle" class="t-b">IaaS</text>
             <text x="430" y="20" text-anchor="middle" class="t-b">PaaS</text>
             <text x="590" y="20" text-anchor="middle" class="t-b">SaaS</text>
-            <g font-size="12" text-anchor="middle">
+            <g text-anchor="middle">
               <rect x="40" y="30" width="140" height="28" class="box-soft"/><text x="110" y="49" class="t">Applications</text>
               <rect x="40" y="60" width="140" height="28" class="box-soft"/><text x="110" y="79" class="t">Data</text>
               <rect x="40" y="90" width="140" height="28" class="box-soft"/><text x="110" y="109" class="t">Runtime</text>
@@ -281,10 +282,10 @@
               <rect x="520" y="240" width="140" height="28" class="box-acc"/><text x="590" y="259" class="t">Storage</text>
               <rect x="520" y="270" width="140" height="28" class="box-acc"/><text x="590" y="289" class="t">Networking</text>
             </g>
-            <text x="260" y="318" text-anchor="middle" class="t-m">dashed = you manage · solid = provider manages</text>
+            <text x="350" y="318" text-anchor="middle" class="t-m">light = you manage · accent = provider manages</text>
           </svg>
         </div>
-        <figcaption>Responsibility stack. Pizza analogy: on-prem is cooking at home, IaaS is a rented kitchen, PaaS is take-and-bake, SaaS is dining out.</figcaption>
+        <figcaption>Responsibility stack, left to right = less you manage. Pizza analogy: on-prem is cooking at home, IaaS is a rented kitchen, PaaS is take-and-bake, SaaS is dining out.</figcaption>
       </figure>
       <div class="tbl">
         <table>
@@ -310,10 +311,10 @@
             <tr><td><strong>Private</strong></td><td>Dedicated to one organisation (OpenStack, VMware)</td><td>Full control, compliance</td><td>High CapEx, limited scale</td></tr>
             <tr><td><strong>Hybrid</strong></td><td>Private + public connected</td><td>Sensitive stays private, burst to public</td><td>Integration complexity</td></tr>
             <tr><td><strong>Community</strong></td><td>Shared by organisations with common needs</td><td>Cost shared, sector compliance</td><td>Slower shared decisions</td></tr>
-            <tr><td><strong>Multi-cloud</strong></td><td>Two or more public providers</td><td>No lock-in, best of each</td><td>Highest management complexity</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="muted">NIST defines only these four deployment models. <strong>Multi-cloud</strong> (using two or more public providers to avoid lock-in) is a strategy, not a NIST deployment model.</p>
     </section>
 
     <!-- CASES -->
@@ -399,7 +400,7 @@
 
     <!-- revision -->
     <section id="revision">
-      <h2><span class="num">12</span>Quick revision (2-mark answers)</h2>
+      <h2><span class="num">10</span>Quick revision (2-mark answers)</h2>
       <ul class="qr">
         <li><b>Cloud:</b> on-demand network access to a shared pool of configurable resources, billed per use.</li>
         <li><b>NIST 5:</b> on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service.</li>
@@ -412,9 +413,7 @@
         <li><b>Elasticity:</b> automatic scale up and down with demand; scalability is growth only.</li>
         <li><b>Provisioning:</b> advance (fixed), dynamic (auto), self-service (portal/API).</li>
         <li><b>IaaS:</b> VMs/storage/network (EC2); <b>PaaS:</b> platform for code (Heroku); <b>SaaS:</b> ready app (Gmail).</li>
-        <li><b>Deployments:</b> public, private, hybrid, community, multi-cloud.</li>
-        <li><b>VDI:</b> desktops as central VMs; only pixels travel to endpoints.</li>
-        <li><b>DR:</b> restore IT after disruption; RTO = how fast, RPO = how much data loss.</li>
+        <li><b>Deployments (NIST):</b> public, private, hybrid, community.</li>
       </ul>
     </section>
   </main>

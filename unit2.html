@@ -58,13 +58,13 @@
       <p>SOA builds an application from independent, reusable <strong>services</strong>, each doing one business function. Services communicate over a network using standard protocols, so they can be written in different languages and run on different platforms.</p>
       <figure>
         <div class="fig">
-          <svg viewBox="0 0 640 260" width="640" role="img" aria-label="SOA triangle: provider publishes to registry, consumer finds, then binds">
+          <svg viewBox="0 0 640 260" width="640" style="min-width:480px" role="img" aria-label="SOA triangle: service provider publishes to the registry, consumer finds it there, then binds directly to the provider">
             <defs><marker id="arSoa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
             <rect x="220" y="15" width="200" height="60" rx="6" class="box-acc"/><text x="320" y="40" text-anchor="middle" class="t-b">Service Registry</text><text x="320" y="58" text-anchor="middle" class="t-m">(UDDI)</text>
             <rect x="20" y="175" width="190" height="60" rx="6" class="box"/><text x="115" y="200" text-anchor="middle" class="t-b">Consumer</text><text x="115" y="218" text-anchor="middle" class="t-m">(client)</text>
             <rect x="430" y="175" width="190" height="60" rx="6" class="box"/><text x="525" y="200" text-anchor="middle" class="t-b">Provider</text><text x="525" y="218" text-anchor="middle" class="t-m">(publishes WSDL)</text>
             <path d="M490,175 L390,75" class="ln" marker-end="url(#arSoa)"/><text x="485" y="115" class="t-m">1. Publish</text>
-            <path d="M150,175 L250,75" class="ln" marker-end="url(#arSoa)"/><text x="150" y="115" class="t-m">2. Find</text>
+            <path d="M150,175 L250,75" class="ln" marker-end="url(#arSoa)"/><text x="142" y="115" text-anchor="end" class="t-m">2. Find</text>
             <path d="M210,205 L430,205" class="ln-acc" marker-end="url(#arSoa)"/><text x="320" y="195" text-anchor="middle" class="t-acc">3. Bind + invoke</text>
           </svg>
         </div>
@@ -80,13 +80,13 @@
           </tbody>
         </table>
       </div>
-      <p><strong>Features:</strong> loose coupling, reusability, interoperability, abstraction, discoverability. <strong>Example:</strong> a travel site combining separate flight, hotel and payment services. Systems built from such interacting services are called <strong>systems of systems</strong>.</p>
+      <p><strong>Features:</strong> loose coupling, reusability, interoperability, abstraction, discoverability. <strong>Example:</strong> a travel site combining separate flight, hotel and payment services. Such a composition is a <strong>system of systems</strong>: independently operated and managed systems (airline, hotel chain, bank) that collaborate to deliver a capability none provides alone.</p>
     </section>
 
     <!-- 2 -->
     <section id="web-services">
       <h2><span class="num">02</span>Web services: SOAP building blocks</h2>
-      <p><strong>SOAP (Simple Object Access Protocol)</strong> is an XML-based protocol for exchanging messages, usually over HTTP. A SOAP message has four parts:</p>
+      <p><strong>SOAP</strong> (formerly Simple Object Access Protocol, now just SOAP) is an XML-based protocol for exchanging messages, usually over HTTP. A SOAP message has four parts:</p>
       <div class="split">
         <div><h5>Envelope (required)</h5><p>Root element marking the XML as a SOAP message.</p></div>
         <div><h5>Header (optional)</h5><p>Security, transaction ID, routing info.</p></div>
@@ -96,7 +96,7 @@
       <p>Services are described in <strong>WSDL</strong> (what operations exist, required) and listed in <strong>UDDI</strong> (directory). SOAP has built-in <strong>WS-Security</strong>, which is why banks and enterprises still use it despite its heaviness.</p>
       <div class="tbl">
         <table>
-          <thead><tr><th>Basis</th><th>RESTful</th><th>RESTless (SOAP)</th></tr></thead>
+          <thead><tr><th>Basis</th><th>REST</th><th>SOAP (RESTless example)</th></tr></thead>
           <tbody>
             <tr><td>Type</td><td>Architectural style</td><td>Protocol</td></tr>
             <tr><td>Data format</td><td>JSON, XML, text</td><td>XML only</td></tr>
@@ -129,8 +129,9 @@
           <thead><tr><th>Method</th><th>Operation</th><th>Example</th></tr></thead>
           <tbody>
             <tr><td><code>GET</code></td><td>Read</td><td><code>GET /students/101</code></td></tr>
-            <tr><td><code>POST</code></td><td>Create</td><td><code>POST /students</code></td></tr>
-            <tr><td><code>PUT</code></td><td>Update</td><td><code>PUT /students/101</code></td></tr>
+            <tr><td><code>POST</code></td><td>Create (not idempotent)</td><td><code>POST /students</code></td></tr>
+            <tr><td><code>PUT</code></td><td>Full replace (idempotent)</td><td><code>PUT /students/101</code></td></tr>
+            <tr><td><code>PATCH</code></td><td>Partial update</td><td><code>PATCH /students/101</code></td></tr>
             <tr><td><code>DELETE</code></td><td>Delete</td><td><code>DELETE /students/101</code></td></tr>
           </tbody>
         </table>
@@ -145,7 +146,7 @@
       <ul>
         <li><strong>Decoupling:</strong> in time (subscriber offline still gets later messages), space (no addresses), and synchronization (async).</li>
         <li><strong>Example:</strong> flight-price service publishes <code>fares/delhi-goa</code>; the booking site, the alert app and analytics all subscribe independently.</li>
-        <li><strong>Cloud tools:</strong> MQTT topics, Apache Kafka, AWS SNS/SQS, Azure Service Bus.</li>
+        <li><strong>Cloud tools:</strong> MQTT topics, Apache Kafka, AWS SNS and Azure Service Bus topics for pub-sub; SQS is point-to-point queueing, often paired as SNS → SQS.</li>
       </ul>
     </section>
 
@@ -155,8 +156,7 @@
       <p>A <strong>hypervisor (Virtual Machine Monitor)</strong> sits between hardware and operating systems, letting several VMs share one physical machine while each believes it owns the CPU, memory and devices. <span class="hl">This is the foundation of resource pooling and elasticity.</span></p>
       <figure>
         <div class="fig">
-          <svg viewBox="0 0 640 270" width="640" role="img" aria-label="Hypervisor stack with three VMs">
-            <defs><marker id="arVx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>
+          <svg viewBox="0 0 640 270" width="640" style="min-width:480px" role="img" aria-label="Virtualization stack: three guest VMs on top, hypervisor in the middle, physical CPU, RAM and devices at the bottom">
             <rect x="30" y="10" width="180" height="90" rx="6" class="box-soft"/><text x="120" y="35" text-anchor="middle" class="t-b">VM 1</text><text x="120" y="58" text-anchor="middle" class="t-m">Apps + Guest OS</text>
             <rect x="230" y="10" width="180" height="90" rx="6" class="box-soft"/><text x="320" y="35" text-anchor="middle" class="t-b">VM 2</text><text x="320" y="58" text-anchor="middle" class="t-m">Apps + Guest OS</text>
             <rect x="430" y="10" width="180" height="90" rx="6" class="box-soft"/><text x="520" y="35" text-anchor="middle" class="t-b">VM 3</text><text x="520" y="58" text-anchor="middle" class="t-m">Apps + Guest OS</text>
@@ -166,7 +166,7 @@
             <rect x="430" y="210" width="180" height="45" rx="6" class="box"/><text x="520" y="237" text-anchor="middle" class="t-b">NIC, Disk, GPU</text>
           </svg>
         </div>
-        <figcaption>Each VM sees virtual hardware; the hypervisor maps it to physical hardware.</figcaption>
+        <figcaption>Three-layer stack: guest VMs on top, hypervisor in the middle, physical hardware at the bottom. The hypervisor maps each VM's virtual CPU, memory and I/O to the physical resources.</figcaption>
       </figure>
       <div class="tbl">
         <table>
@@ -188,7 +188,7 @@
         <table>
           <thead><tr><th>Type</th><th>Description</th><th>Example</th></tr></thead>
           <tbody>
-            <tr><td><strong>Server / hardware</strong></td><td>One server split into many VMs via hypervisor</td><td>ESXi, EC2</td></tr>
+            <tr><td><strong>Server / hardware</strong></td><td>One server split into many VMs via hypervisor</td><td>ESXi, KVM, Hyper-V (used by clouds like EC2)</td></tr>
             <tr><td><strong>OS (containers)</strong></td><td>Isolated containers share one kernel; lightweight, fast</td><td>Docker, LXC</td></tr>
             <tr><td><strong>Storage</strong></td><td>Many devices pooled into one logical store</td><td>SAN, EBS</td></tr>
             <tr><td><strong>Network</strong></td><td>Physical net split into virtual nets (SDN)</td><td>VLAN, VPC</td></tr>
@@ -212,7 +212,7 @@
             <tr><td class="num">1</td><td><strong>ISA level</strong></td><td>Emulate the instruction set; run code for another CPU</td><td>QEMU emulating ARM on x86</td></tr>
             <tr><td class="num">2</td><td><strong>Hardware abstraction (HAL)</strong></td><td>Hypervisor maps virtual hardware to physical (classic VMs)</td><td>VMware, KVM, Xen</td></tr>
             <tr><td class="num">3</td><td><strong>Operating system level</strong></td><td>Isolate processes into containers on one kernel</td><td>Docker, LXC</td></tr>
-            <tr><td class="num">4</td><td><strong>Library level</strong></td><td>Intercept API calls (e.g. system calls) and redirect</td><td>Wine, vCUDA</td></tr>
+            <tr><td class="num">4</td><td><strong>Library level</strong></td><td>Intercept API calls (e.g. system calls) and redirect</td><td>vCUDA, WSL 1 (Wine is often cited but is strictly API translation)</td></tr>
             <tr><td class="num">5</td><td><strong>Application level</strong></td><td>App runs in its own virtual machine (language VM)</td><td>JVM, .NET CLR</td></tr>
           </tbody>
         </table>
@@ -222,11 +222,12 @@
     <!-- 8 -->
     <section id="virt-mechanisms">
       <h2><span class="num">08</span>Virtualization structures, tools and mechanisms</h2>
+      <p>Three things examiners mix up: <strong>structures</strong> (where the hypervisor sits: bare-metal Type 1, hosted Type 2), <strong>mechanisms</strong> (how privileged instructions are handled: trap-and-emulate, binary translation, hypercalls, hardware assist) and <strong>tools</strong> (ESXi, KVM, Xen, VirtualBox, Docker).</p>
       <div class="tbl">
         <table>
           <thead><tr><th>Technique</th><th>Idea</th><th>Trade-off</th></tr></thead>
           <tbody>
-            <tr><td><strong>Full virtualization (binary translation)</strong></td><td>Sensitive instructions rewritten on the fly; guest unmodified</td><td>Works with any OS, slower</td></tr>
+            <tr><td><strong>Full virtualization</strong></td><td>Unmodified guest; historically via binary translation rewriting sensitive instructions, today usually via hardware assist</td><td>Runs any OS; near-native with VT-x/EPT</td></tr>
             <tr><td><strong>Paravirtualization</strong></td><td>Guest modified to call hypervisor directly (hypercalls)</td><td>Faster, needs modified OS (Xen)</td></tr>
             <tr><td><strong>Hardware-assisted</strong></td><td>CPU traps sensitive instructions (Intel VT-x, AMD-V)</td><td>Fast, unmodified guest (KVM)</td></tr>
           </tbody>
@@ -264,7 +265,7 @@
           <thead><tr><th>Pattern (cheap → fast)</th><th>Idea</th></tr></thead>
           <tbody>
             <tr><td><strong>Backup and restore</strong></td><td>Backups in object storage; rebuild on failure (hours)</td></tr>
-            <tr><td><strong>Pilot light</strong></td><td>Core services always on, scaled up on demand</td></tr>
+            <tr><td><strong>Pilot light</strong></td><td>Core services always on, scaled up on demand (tens of minutes)</td></tr>
             <tr><td><strong>Warm standby</strong></td><td>Scaled-down copy always running; promote on failure (minutes)</td></tr>
             <tr><td><strong>Multi-site active-active</strong></td><td>Full copies in two regions; near-zero RTO</td></tr>
           </tbody>
@@ -333,7 +334,7 @@
         <details><summary>Model answer</summary><div>
           <ul>
             <li>Mobile API: <strong>RESTful</strong> - JSON, stateless, cacheable, uses GET/POST/PUT/DELETE, fast and simple.</li>
-            <li>Bank transfer: <strong>SOAP (RESTless)</strong> - strict WSDL contract, XML-only, built-in WS-Security, can be stateful; heaviness is acceptable for correctness.</li>
+            <li>Bank transfer: <strong>SOAP</strong> (a RESTless, operation-based protocol) - strict WSDL contract, XML-only, built-in WS-Security, can be stateful; heaviness is acceptable for correctness.</li>
           </ul>
         </div></details>
       </div>
@@ -352,20 +353,22 @@
 
     <!-- revision -->
     <section id="revision">
-      <h2><span class="num">12</span>Quick revision (2-mark answers)</h2>
+      <h2><span class="num">11</span>Quick revision (2-mark answers)</h2>
       <ul class="qr">
         <li><b>SOA:</b> app built from independent reusable services; provider, registry, consumer.</li>
+        <li><b>System of systems:</b> independently managed systems collaborating for a joint capability.</li>
         <li><b>Features:</b> loose coupling, reusability, interoperability, discoverability.</li>
         <li><b>SOAP:</b> XML protocol; Envelope, Header, Body, Fault; described by WSDL.</li>
         <li><b>REST:</b> resources via URIs, JSON over HTTP; stateless, cacheable, layered.</li>
-        <li><b>Methods:</b> GET read, POST create, PUT update, DELETE delete.</li>
-        <li><b>Pub-Sub:</b> publishers → broker/topic → subscribers; decoupled in time, space, sync.</li>
+        <li><b>Methods:</b> GET read, POST create, PUT full replace, PATCH partial update, DELETE delete.</li>
+        <li><b>Pub-Sub:</b> publishers → broker/topic → subscribers; decoupled in time, space, sync (SNS, Kafka, MQTT; SQS is queueing).</li>
         <li><b>Hypervisor:</b> software mapping virtual CPU/memory/I-O to physical (VMM).</li>
         <li><b>Type 1 / 2:</b> bare-metal on hardware (ESXi) vs hosted on OS (VirtualBox).</li>
         <li><b>Levels:</b> ISA, HAL, OS (containers), library, application (JVM).</li>
-        <li><b>CPU:</b> full (binary translation), para (hypercalls), hardware-assisted (VT-x).</li>
+        <li><b>CPU:</b> full (unmodified guest), para (hypercalls), hardware-assisted (VT-x).</li>
         <li><b>Memory:</b> guest-virtual → guest-physical → machine; shadow tables or EPT; ballooning, sharing.</li>
         <li><b>I/O:</b> emulation, virtio para-I/O, passthrough/SR-IOV.</li>
+        <li><b>VDI:</b> desktops as central VMs; only pixels travel to endpoints.</li>
         <li><b>RTO / RPO:</b> how fast to recover / how much data loss allowed.</li>
         <li><b>DR patterns:</b> backup-restore, pilot light, warm standby, active-active.</li>
       </ul>
